@@ -16,8 +16,8 @@ public class OrderMethod {
     private File input;
     private File output;
     private String[] orders;
-    double taxes = .02;
-    double shipping = .05;
+    final double  TAX_RATE = .02;
+    final double SHIPPING_RATE = .05;
     double finalTaxes;
     double finalShipping;
     double finalTotal;
@@ -44,19 +44,11 @@ public class OrderMethod {
             
             br.readLine();
             
-            for(int i = 0; true; i++)
+            while(br.ready())
             {
-                if(br.ready()) 
-                {
                     orders = br.readLine().split("\\|");
                     Writer(writer);
-                }
-                else
-                {
-                   break;
-                } 
             }
-            
             writer.close();
             System.out.println("Finished processing orders.");
         }
@@ -71,33 +63,27 @@ public class OrderMethod {
         
     }
     
-    public double calculate(String Calculation)
+    public double calculateTax()
     {
         
+        return finalTaxes = (Double.parseDouble(orders[2]) * TAX_RATE * Integer.parseInt(orders[3]));
+    }
+    
+    public double calculateShipping()
+    {
         
-        if(Calculation.equals("Tax"))
-        {
-            return finalTaxes = (Double.parseDouble(orders[2]) * taxes * Integer.parseInt(orders[3]));
-        }
-        else if(Calculation.equals("Shipping"))
-        {
-            return finalShipping = (Double.parseDouble(orders[2]) * shipping * Integer.parseInt(orders[3]));
-        }
-        else if(Calculation.equals("Total"))
-        {
-            return  finalTotal = ((Double.parseDouble(orders[2]) * taxes * Integer.parseInt(orders[3])) + (Double.parseDouble(orders[2]) * shipping * Integer.parseInt(orders[3])) + ((Double.parseDouble(orders[2])*(Double.parseDouble(orders[3])))));
-        }
-        else
-        {
-          return 0;  
-        } 
+        return finalShipping = (Double.parseDouble(orders[2]) * SHIPPING_RATE * Integer.parseInt(orders[3]));
+    }
+    
+    public double calculateTotal()
+    {
+        return  finalTotal = ((Double.parseDouble(orders[2]) * TAX_RATE * Integer.parseInt(orders[3])) + (Double.parseDouble(orders[2]) * SHIPPING_RATE * Integer.parseInt(orders[3])) + ((Double.parseDouble(orders[2])*(Double.parseDouble(orders[3])))));
     }
     
     public void Writer(BufferedWriter writer)
     {
         try
         {
-            
                     writer.write("Order ID: " + orders[0]);
                     writer.write("\n");
                     writer.write("Part Num: " + orders[1]);
@@ -106,16 +92,15 @@ public class OrderMethod {
                     writer.write("\n");
                     writer.write("Quantity: " + orders[3]);
                     writer.write("\n");
-                    writer.write("Tax: " + finalTaxes);
+                    writer.write("Tax: " + calculateTax());
                     writer.write("\n");
-                    writer.write("Shipping: " + finalShipping);
+                    writer.write("Shipping: " + calculateShipping());
                     writer.write("\n");
-                    writer.write("Total: " + finalTotal);
+                    writer.write("Total: " + calculateTotal());
                     writer.write("\n");
-                    writer.write("\n");
-                    
+                    writer.write("\n");      
         }
-        catch(IOException e)
+        catch(IOException ex)
         {
             System.out.println("Could not write to file.");
         }
